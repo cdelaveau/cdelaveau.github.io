@@ -1,42 +1,114 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ma Carte de Visite | StopMotionDraw</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StopMotionDraw | Carte de Visite</title>
+  <link rel="icon" type="image/png" href="assets/images/Untitled_logo_1_free-file-removebg-preview.png" />
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: "Poppins", sans-serif;
       background: #0b0b0d;
       color: #f5f5f5;
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
+    /* --------- ÉCRAN DE CHARGEMENT --------- */
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #0b0b0d;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #loader img {
+      width: 90px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 6px rgba(230,57,70,0.7));
+      animation: pulse 1.5s infinite alternate;
+    }
+    #progress-container {
+      width: 250px;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    #progress-bar {
+      width: 0;
+      height: 100%;
+      background: #e63946;
+      animation: loadbar 5s forwards;
+    }
+    @keyframes loadbar {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.7; }
+      to { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* --------- HEADER --------- */
     header {
       text-align: center;
-      padding: 60px 20px 40px;
+      padding: 50px 20px 30px;
       background: linear-gradient(180deg, #121212 0%, #0b0b0d 100%);
     }
+    header img {
+      width: 80px;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 6px rgba(230,57,70,0.6));
+    }
     header h1 {
-      font-size: 2.5rem;
+      font-size: 2.3rem;
       letter-spacing: 2px;
       color: #fff;
+      margin: 0;
     }
     header p {
       font-size: 1rem;
       color: #aaa;
     }
 
+    /* --------- NAVBAR FIXE --------- */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      background: rgba(15,15,17,0.95);
+      backdrop-filter: blur(6px);
+      padding: 10px 0;
+      border-bottom: 1px solid #222;
+    }
+    nav a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s ease;
+    }
+    nav a:hover { color: #e63946; }
+    nav i { font-style: normal; font-size: 1.1rem; }
+
+    /* --------- SECTIONS --------- */
     section {
       max-width: 1100px;
       margin: 0 auto;
       padding: 60px 20px;
     }
-
     h2 {
       text-align: center;
       font-size: 1.8rem;
@@ -54,7 +126,7 @@
       border-radius: 3px;
     }
 
-    /* --- OFFRES --- */
+    /* --------- OFFRES --------- */
     .offers {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -91,7 +163,7 @@
       margin-top: 15px;
     }
 
-    /* --- GALERIE --- */
+    /* --------- GALERIE --------- */
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -99,41 +171,39 @@
     }
     .gallery img {
       width: 100%;
-      height: auto;
       border-radius: 12px;
-      object-fit: cover;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
       box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    }
+    .gallery img.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     .gallery img:hover {
       transform: scale(1.05);
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
 
+    /* --------- FOOTER --------- */
     footer {
       text-align: center;
       padding: 40px 20px;
       border-top: 1px solid #222;
       background: #0d0d0f;
     }
-    .socials {
-      margin-bottom: 20px;
-    }
+    .socials { margin-bottom: 20px; }
     .socials a {
       margin: 0 10px;
       color: #f5f5f5;
       text-decoration: none;
       transition: color 0.3s ease;
     }
-    .socials a:hover {
-      color: #e63946;
-    }
-    .email {
-      font-size: 0.9rem;
-      color: #aaa;
-    }
+    .socials a:hover { color: #e63946; }
+    .email { font-size: 0.9rem; color: #aaa; }
 
-    /* --- BOUTON RETOUR HAUT --- */
+    /* --------- BOUTON RETOUR HAUT --------- */
     #backToTop {
       position: fixed;
       bottom: 25px;
@@ -150,91 +220,129 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
       transition: transform 0.3s ease;
     }
-    #backToTop:hover {
-      transform: scale(1.1);
+    #backToTop:hover { transform: scale(1.1); }
+
+    /* --- Apparition du site --- */
+    #content {
+      opacity: 0;
+      transition: opacity 1.5s ease;
     }
+    #content.visible { opacity: 1; }
   </style>
 </head>
 <body>
 
-  <header id="top">
-    <h1>StopMotionDraw</h1>
-    <p>Créations artistiques & illustrations personnalisées</p>
-  </header>
+  <!-- Écran de chargement -->
+  <div id="loader">
+    <img src="assets/images/Untitled_logo_1_free-file-removebg-preview.png" alt="Logo StopMotionDraw">
+    <div id="progress-container"><div id="progress-bar"></div></div>
+  </div>
 
-  <section>
-    <h2>Mes Offres</h2>
-    <div class="offers">
-      <div class="offer">
-        <h3>Line-art</h3>
-        <p>Dessin au trait pur</p>
-        <p>1 personnage</p>
-        <p>Format A4 portrait</p>
-        <p>Sans droits d'auteur</p>
-        <div class="price">20€</div>
+  <!-- Contenu du site -->
+  <div id="content">
+    <header id="top">
+      <img src="assets/images/Untitled_logo_1_free-file-removebg-preview.png" alt="Logo StopMotionDraw">
+      <h1>StopMotionDraw</h1>
+      <p>Créations artistiques & illustrations personnalisées</p>
+    </header>
+
+    <nav>
+      <a href="#top"><i>🏠</i>Accueil</a>
+      <a href="#offers"><i>💡</i>Offres</a>
+      <a href="#gallery"><i>🖼️</i>Galerie</a>
+      <a href="#contact"><i>📞</i>Contact</a>
+    </nav>
+
+    <section id="offers">
+      <h2>Mes Offres</h2>
+      <div class="offers">
+        <div class="offer">
+          <h3>Line-art</h3>
+          <p>Dessin au trait pur</p>
+          <p>1 personnage</p>
+          <p>Format A4 portrait</p>
+          <p>Sans droits d'auteur</p>
+          <div class="price">20€</div>
+        </div>
+        <div class="offer">
+          <h3>Flat-color</h3>
+          <p>Dessin au trait avec couleurs plates</p>
+          <p>1 personnage</p>
+          <p>Fond uni</p>
+          <p>Format A4 portrait ou paysage</p>
+          <p>Sans droits d'auteur</p>
+          <div class="price">40€</div>
+        </div>
+        <div class="offer">
+          <h3>Line-art + Flat-color + Shades</h3>
+          <p>Dessin complet avec ombrages</p>
+          <p>1 personnage</p>
+          <p>Fond uni</p>
+          <p>Format A4 portrait ou paysage</p>
+          <p>Sans droits d'auteur</p>
+          <p>Pose en perspective</p>
+          <div class="price">60€</div>
+        </div>
       </div>
-      <div class="offer">
-        <h3>Flat-color</h3>
-        <p>Dessin au trait avec couleurs plates</p>
-        <p>1 personnage</p>
-        <p>Fond uni</p>
-        <p>Format A4 portrait ou paysage</p>
-        <p>Sans droits d'auteur</p>
-        <div class="price">40€</div>
+    </section>
+
+    <section id="gallery">
+      <h2>Galerie</h2>
+      <div class="gallery">
+        <img src="assets/images/Anime Draw - Frieren.png" alt="Frieren">
+        <img src="assets/images/Anime Draw - Inosuke Hashibira.png" alt="Inosuke Hashibira">
+        <img src="assets/images/Anime Draw - Kikoru Shinomiya.png" alt="Kikoru Shinomiya">
+        <img src="assets/images/Anime Draw - Narumi x Hoshina.png" alt="Narumi x Hoshina">
+        <img src="assets/images/Anime Draw - Todoroki Touya.png" alt="Todoroki Touya">
+        <img src="assets/images/Anime Draw - Zabuza Momochi.png" alt="Zabuza Momochi">
+        <img src="assets/images/Draw monster - 1.png" alt="Personnage original 1">
+        <img src="assets/images/Drawing Redesign - 1.png" alt="Redesign 1">
+        <img src="assets/images/Drawing Redesign - 2.png" alt="Redesign 2">
+        <img src="assets/images/Drawing Redesign - 3.png" alt="Redesign 3">
+        <img src="assets/images/Drawing Redesign - 4.png" alt="Redesign 4">
+        <img src="assets/images/Drawing Redesign - 5.png" alt="Redesign 5">
+        <img src="assets/images/Le Compte de Monte-Crysto.png" alt="Le Compte de Monte-Crysto">
+        <img src="assets/images/Mecha Drawing - 1.png" alt="Mecha Drawing 1">
       </div>
-      <div class="offer">
-        <h3>Line-art + Flat-color + Shades</h3>
-        <p>Dessin complet avec ombrages</p>
-        <p>1 personnage</p>
-        <p>Fond uni</p>
-        <p>Format A4 portrait ou paysage</p>
-        <p>Sans droits d'auteur</p>
-        <p>Pose en perspective</p>
-        <div class="price">60€</div>
+    </section>
+
+    <footer id="contact">
+      <div class="socials">
+        <a href="https://www.facebook.com/profile.php?id=61581135437307" target="_blank">📘 Facebook</a> |
+        <a href="https://www.youtube.com/@StopMotionDraw" target="_blank">▶️ YouTube</a> |
+        <a href="https://www.instagram.com/stopmotion_draw/" target="_blank">📸 Instagram</a> |
+        <a href="https://www.my-universe.art/" target="_blank">🌐 Portfolio</a>
       </div>
-    </div>
-  </section>
+      <div class="email">📧 stopmotiondraw61@gmail.com</div>
+    </footer>
 
-  <section>
-    <h2>Galerie</h2>
-    <div class="gallery">
-      <img src="assets/images/Anime Draw - Frieren.png" alt="Frieren">
-      <img src="assets/images/Anime Draw - Inosuke Hashibira.png" alt="Inosuke Hashibira">
-      <img src="assets/images/Anime Draw - Kikoru Shinomiya.png" alt="Kikoru Shinomiya">
-      <img src="assets/images/Anime Draw - Narumi x Hoshina.png" alt="Narumi x Hoshina">
-      <img src="assets/images/Anime Draw - Todoroki Touya.png" alt="Todoroki Touya">
-      <img src="assets/images/Anime Draw - Zabuza Momochi.png" alt="Zabuza Momochi">
-      <img src="assets/images/Draw monster - 1.png" alt="Personnage original 1">
-      <img src="assets/images/Drawing Redesign - 1.png" alt="Redesign 1">
-      <img src="assets/images/Drawing Redesign - 2.png" alt="Redesign 2">
-      <img src="assets/images/Drawing Redesign - 3.png" alt="Redesign 3">
-    </div>
-  </section>
-
-  <footer>
-    <div class="socials">
-      <a href="https://www.facebook.com/profile.php?id=61581135437307" target="_blank">Facebook</a> |
-      <a href="https://www.youtube.com/@StopMotionDraw" target="_blank">YouTube</a> |
-      <a href="https://www.instagram.com/stopmotion_draw/" target="_blank">Instagram</a> |
-      <a href="https://www.my-universe.art/" target="_blank">Portfolio</a>
-    </div>
-    <div class="email">📧 stopmotiondraw61@gmail.com</div>
-  </footer>
-
-  <button id="backToTop" title="Retour en haut">↑</button>
+    <button id="backToTop" title="Retour en haut">↑</button>
+  </div>
 
   <script>
+    // Progress-bar -> affichage du site
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("content").classList.add("visible");
+      }, 5000);
+    });
+
+    // Bouton retour haut
     const backToTop = document.getElementById("backToTop");
     window.addEventListener("scroll", () => {
-      if (window.scrollY > 200) backToTop.style.display = "block";
-      else backToTop.style.display = "none";
+      backToTop.style.display = window.scrollY > 200 ? "block" : "none";
     });
     backToTop.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
-  </script>
 
+    // Fade-in des images
+    const imgs = document.querySelectorAll(".gallery img");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
+    }, { threshold: 0.2 });
+    imgs.forEach(img => observer.observe(img));
+  </script>
 </body>
 </html>
-
-
