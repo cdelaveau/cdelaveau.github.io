@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ma Carte de Visite</title>
+  <title>StopMotionDraw | Carte de Visite</title>
   <link rel="icon" type="image/png" href="assets/images/Untitled_logo_1_free-file-removebg-preview.png" />
   <style>
     html { scroll-behavior: smooth; }
@@ -16,6 +16,30 @@
       overflow-x: hidden;
     }
 
+    /* --------- BANNIÈRE DÉFILANTE --------- */
+    .banner {
+      width: 100%;
+      background: linear-gradient(90deg, #e63946, #9b1c2e, #e63946);
+      color: #fff;
+      text-align: center;
+      padding: 8px 0;
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      z-index: 9999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .banner p {
+      white-space: nowrap;
+      font-size: 0.95rem;
+      animation: scrollText 15s linear infinite;
+      margin: 0;
+    }
+    @keyframes scrollText {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
     /* --------- ÉCRAN DE CHARGEMENT --------- */
     #loader {
       position: fixed;
@@ -26,7 +50,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
+      z-index: 9000;
     }
     #loader img {
       width: 90px;
@@ -69,13 +93,13 @@
       opacity: 1;
       pointer-events: none;
       transition: opacity 1.5s ease;
-      z-index: 5000;
+      z-index: 8000;
     }
 
     /* --------- HEADER --------- */
     header {
       text-align: center;
-      padding: 50px 20px 30px;
+      padding: 90px 20px 30px; /* marge ajustée à cause de la bannière */
       background: linear-gradient(180deg, #121212 0%, #0b0b0d 100%);
     }
     header img {
@@ -97,7 +121,7 @@
     /* --------- NAVBAR FIXE --------- */
     nav {
       position: sticky;
-      top: 0;
+      top: 32px; /* position sous la bannière */
       z-index: 100;
       display: flex;
       justify-content: center;
@@ -178,7 +202,6 @@
       font-weight: bold;
       margin-top: 15px;
     }
-
     .note {
       text-align: center;
       margin-top: 40px;
@@ -264,6 +287,11 @@
 </head>
 <body>
 
+  <!-- Bannière défilante -->
+  <div class="banner">
+    <p>⚠️ Ce site est uniquement une carte de visite — pour découvrir toutes mes œuvres, abonne-toi à mes réseaux ou rends-toi sur mon site officiel 🌐 my-universe.art ⚠️</p>
+  </div>
+
   <!-- Écran de chargement -->
   <div id="loader">
     <img src="assets/images/Untitled_logo_1_free-file-removebg-preview.png" alt="Logo StopMotionDraw">
@@ -339,7 +367,6 @@
         <img src="assets/images/Anime Draw - Narumi x Hoshina.png" alt="Narumi x Hoshina">
         <img src="assets/images/Anime Draw - Todoroki Touya.png" alt="Todoroki Touya">
         <img src="assets/images/Anime Draw - Zabuza Momochi.png" alt="Zabuza Momochi">
-        <img src="assets/images/Anime Draw - Zenitsu Agatsuma.png" alt="Zenitsu Agatsuma">
         <img src="assets/images/Draw monster - 1.png" alt="Personnage original 1">
         <img src="assets/images/Drawing Redesign - 1.png" alt="Redesign 1">
         <img src="assets/images/Drawing Redesign - 2.png" alt="Redesign 2">
@@ -365,7 +392,7 @@
   </div>
 
   <script>
-    // Loader progress bar
+    // Progress-bar animation
     let progress = 0;
     const bar = document.getElementById("progress-bar");
     const text = document.getElementById("progress-text");
@@ -410,4 +437,3 @@
   </script>
 </body>
 </html>
-
